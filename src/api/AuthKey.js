@@ -1,3 +1,3 @@
 export default {
-    Key: 'LTTAGU9WDH7YE94G'
+    Key: 'LTTAGU9WDH7YE94G' // asd
 }
