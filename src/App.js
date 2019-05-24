@@ -8,7 +8,7 @@ import './App.css';
 class App extends Component {
     state = {
         symbols: { from: 'EUR', to: 'PLN' },
-        exchange: { rate: 4.2, from: 'EUR', to: 'PLN' },
+        exchange: { rate: 4.26, from: 'EUR', to: 'PLN' },
         loadingRate: false
     };
 
@@ -21,13 +21,13 @@ class App extends Component {
         const symbols = { from: c.from, to: c.to };
         if (name === 'symbolFrom') symbols.from = value;
         if (name === 'symbolTo') symbols.to = value;
-        if (symbols.to === symbols.from) { this.onCurrencySwitch(); return }
+        if (symbols.to === symbols.from) { this.onCurrencySwitch(); return; }
         this.setExchangeRate(symbols);
         this.setState({ symbols });
     }
 
     onCurrencySwitch = () => {
-        const c = this.state.symbols; // current symbols
+        const c = this.state.exchange; // current symbols
         const symbols = { from: c.to, to: c.from };
         const exchange = {
             rate: (1.0 / this.state.exchange.rate),
@@ -51,13 +51,14 @@ class App extends Component {
                 this.setState({ exchange });
             } else {
                 console.log('Error: Could not get Currency Exchange Rate from API');
+                console.log(res.data);
             }
         }).catch(err => {
             console.log(`Error: ${err}`);
         });
     }
 
-    setHistorical(symbols) {
+    setHistoricalData(symbols) {
         Historical.get('/', {
             params: {
                 from_symbol: symbols.from,
