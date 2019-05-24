@@ -1,0 +1,4 @@
+// This is template file containing API key for https://www.alphavantage.co/
+export default {
+    Key: <public_key>
+}
