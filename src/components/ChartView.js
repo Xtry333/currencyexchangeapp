@@ -6,10 +6,10 @@ class ChartView extends Component {
     render() {
         return (
             <div className='ChartView'>
-                <Line data={{
-                    labels: this.props.history.labels,
+                <Line redraw data={{
+                    labels: this.props.labels,
                     datasets: [{
-                        label: `${this.props.history.symbols.from} -> ${this.props.history.symbols.to}`,
+                        label: `${this.props.historySymbols.from} -> ${this.props.historySymbols.to}`,
                         borderColor: 'rgb(200, 200, 200)',
                         backgroundColor: 'rgba(0, 0, 0, 0.15)',
                         lineTension: .1,
@@ -17,7 +17,7 @@ class ChartView extends Component {
                         pointRadius: 0,
                         pointHitRadius: 3,
                         pointBorderWidth: 0,
-                        data: this.props.history.ys
+                        data: this.props.history
                     }, {
                         label: 'Negative Trend',
                         lineTension: 0,

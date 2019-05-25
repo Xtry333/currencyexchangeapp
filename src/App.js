@@ -10,12 +10,15 @@ class App extends Component {
         symbols: { from: 'EUR', to: 'PLN' },
         exchange: { rate: 4.26, from: 'EUR', to: 'PLN' },
         loadingRate: false,
-        history: { symbols: { from: '', to: '' }, ys: [], labels: [], reqNum: 0 }
+        history: [],
+        labels: [],
+        historySymbols: { from: '', to: '' },
+        //history: { symbols: { from: '', to: '' }, ys: [], labels: [], reqNum: 0 }
     };
 
-    componentDidMount() { 
-        this.setExchangeRate(this.state.symbols);
-        this.setHistoricalData(this.state.symbols);
+    componentDidMount() {
+        //this.setExchangeRate(this.state.symbols);
+        //this.setHistoricalData(this.state.symbols);
     };
 
     onCurrencyChange = (event) => {
@@ -39,7 +42,12 @@ class App extends Component {
             from: c.to,
             to: c.from
         };
-        this.setState({ symbols, exchange });
+        const history = this.state.history;
+        for (let i = 0; i < history.length; i++) {
+            history[i] = 1.0 / parseFloat(history[i]);
+        }
+
+        this.setState({ symbols, exchange, history, historySymbols: symbols });
     }
 
     setExchangeRate(symbols) {
@@ -64,37 +72,74 @@ class App extends Component {
         });
     }
 
+    // setHistoricalData(symbols) {
+    //     Historical.get('/', {
+    //         params: {
+    //             from_symbol: symbols.from,
+    //             to_symbol: symbols.to
+    //         },
+    //     }).then(res => {
+    //         //const history = this.state.history;
+    //         const data = res.data;
+    //         if (data) {
+    //             const meta = data['Meta Data'];
+    //             const raw = data['Time Series FX (Daily)'];
+    //             if (!meta) return;
+    //             if (!data) return;
+
+    //             console.log(meta);
+    //             console.log(raw);
+
+    //             const labels = [], ys = [];
+    //             //history.labels.splice(0, history.labels.length);
+    //             //history.ys.splice(0, history.ys.length);
+
+    //             for (let key in raw) {
+    //                 labels.unshift(key);
+    //                 ys.unshift(raw[key]['4. close']);
+    //             }
+
+    //             const history = { labels, ys };
+    //             history.reqNum = 1 + this.state.history.reqNum
+    //             history.symbols = { from: meta['2. From Symbol'], to: meta['3. To Symbol'] };
+
+    //             this.setState({ history });
+    //         } else {
+    //             console.log('Error: Could not get Historical Data from API');
+    //             console.log(res.data);
+    //         }
+    //     }).catch(err => {
+    //         console.log(`Error: ${err}`);
+    //     });
+    // }
+
     setHistoricalData(symbols) {
+        this.setState({ history: [] });
         Historical.get('/', {
             params: {
                 from_symbol: symbols.from,
                 to_symbol: symbols.to
             },
         }).then(res => {
-            //const history = this.state.history;
             const data = res.data;
-            if (data) {
-                const meta = data['Meta Data'];
-                const raw = data['Time Series FX (Daily)'];
-                if (!meta) return;
-                if (!data) return;
-
+            const meta = data['Meta Data'];
+            const raw = data['Time Series FX (Daily)'];
+            if (meta && raw) {
+                //console.log(meta);
                 //console.log(raw);
 
-                const labels = [], ys = [];
-                //history.labels.splice(0, history.labels.length);
-                //history.ys.splice(0, history.ys.length);
+                const labels = this.state.labels, history = this.state.history;
+                labels.splice(0, labels.length);
+                history.splice(0, history.length);
 
                 for (let key in raw) {
                     labels.unshift(key);
-                    ys.unshift(1.0 / raw[key]['4. close']);
+                    history.unshift(raw[key]['4. close']);
                 }
 
-                const history = { labels, ys };
-                history.reqNum = 1 + this.state.history.reqNum
-                history.symbols = { from: meta['2. From Symbol'], to: meta['3. To Symbol'] };
+                const historySymbols = { from: meta['2. From Symbol'], to: meta['3. To Symbol'] };
 
-                this.setState({ history });
+                this.setState({ history, labels, historySymbols });
             } else {
                 console.log('Error: Could not get Historical Data from API');
                 console.log(res.data);
@@ -112,12 +157,11 @@ class App extends Component {
                     <Currency onChange={this.onCurrencyChange} symbols={this.state.symbols}></Currency>
                     <Exchange onSwitch={this.onCurrencySwitch} exchange={this.state.exchange} loading={this.state.loadingRate}></Exchange>
                 </div>
-                <ChartView key={`REQ${this.state.history.reqNum}`} history={this.state.history}></ChartView>
+                {/* <ChartView key={`REQ${this.state.history.reqNum}`} history={this.state.history}></ChartView> */}
+                <ChartView history={this.state.history} labels={this.state.labels} historySymbols={this.state.historySymbols}></ChartView>
             </div>
         )
     };
-
-
 };
 
 export default App;
