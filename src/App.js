@@ -14,8 +14,8 @@ class App extends Component {
     };
 
     componentDidMount() { 
-        //this.setExchangeRate(symbols);
-        //this.setHistoricalData(symbols);
+        this.setExchangeRate(this.state.symbols);
+        this.setHistoricalData(this.state.symbols);
     };
 
     onCurrencyChange = (event) => {
@@ -79,7 +79,7 @@ class App extends Component {
                 if (!meta) return;
                 if (!data) return;
 
-                console.log(raw);
+                //console.log(raw);
 
                 const labels = [], ys = [];
                 //history.labels.splice(0, history.labels.length);
