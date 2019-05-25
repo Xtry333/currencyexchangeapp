@@ -13,14 +13,15 @@ class App extends Component {
         history: [],
         labels: [],
         historySymbols: { from: '', to: '' },
-        //history: { symbols: { from: '', to: '' }, ys: [], labels: [], reqNum: 0 }
     };
 
+    // Loads exchange data on site visit
     componentDidMount() {
-        //this.setExchangeRate(this.state.symbols);
-        //this.setHistoricalData(this.state.symbols);
+        this.setExchangeRate(this.state.symbols);
+        this.setHistoricalData(this.state.symbols);
     };
 
+    // Fires when currency symbol has been changed
     onCurrencyChange = (event) => {
         const value = event.target.value;
         const name = event.target.name;
@@ -34,6 +35,7 @@ class App extends Component {
         this.setHistoricalData(symbols);
     }
 
+    // Fires when currencies had been switched, either by a button, or manually
     onCurrencySwitch = () => {
         const c = this.state.exchange; // current symbols
         const symbols = { from: c.to, to: c.from };
@@ -50,6 +52,7 @@ class App extends Component {
         this.setState({ symbols, exchange, history, historySymbols: symbols });
     }
 
+    // Connects to an api in order to get real-time exchange rates and sets it
     setExchangeRate(symbols) {
         this.setState({ loadingRate: true });
         RealTime.get('/', {
@@ -72,47 +75,7 @@ class App extends Component {
         });
     }
 
-    // setHistoricalData(symbols) {
-    //     Historical.get('/', {
-    //         params: {
-    //             from_symbol: symbols.from,
-    //             to_symbol: symbols.to
-    //         },
-    //     }).then(res => {
-    //         //const history = this.state.history;
-    //         const data = res.data;
-    //         if (data) {
-    //             const meta = data['Meta Data'];
-    //             const raw = data['Time Series FX (Daily)'];
-    //             if (!meta) return;
-    //             if (!data) return;
-
-    //             console.log(meta);
-    //             console.log(raw);
-
-    //             const labels = [], ys = [];
-    //             //history.labels.splice(0, history.labels.length);
-    //             //history.ys.splice(0, history.ys.length);
-
-    //             for (let key in raw) {
-    //                 labels.unshift(key);
-    //                 ys.unshift(raw[key]['4. close']);
-    //             }
-
-    //             const history = { labels, ys };
-    //             history.reqNum = 1 + this.state.history.reqNum
-    //             history.symbols = { from: meta['2. From Symbol'], to: meta['3. To Symbol'] };
-
-    //             this.setState({ history });
-    //         } else {
-    //             console.log('Error: Could not get Historical Data from API');
-    //             console.log(res.data);
-    //         }
-    //     }).catch(err => {
-    //         console.log(`Error: ${err}`);
-    //     });
-    // }
-
+    // Connects to an api in order to get historical exchange rates, and sets it
     setHistoricalData(symbols) {
         this.setState({ history: [] });
         Historical.get('/', {
