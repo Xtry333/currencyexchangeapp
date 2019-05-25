@@ -18,11 +18,11 @@ class App extends Component {
 
     // Loads exchange data on site visit
     componentDidMount() {
-        // this.setExchangeRate(this.state.symbols);
-        // this.refreshTimer = setInterval(() => {
-        //     this.setExchangeRate(this.state.symbols);
-        // }, 1000 * 60 * 5);
-        // this.setHistoricalData(this.state.symbols);
+        this.setExchangeRate(this.state.symbols);
+        this.refreshTimer = setInterval(() => {
+            this.setExchangeRate(this.state.symbols);
+        }, 1000 * 60 * 5);
+        this.setHistoricalData(this.state.symbols);
     };
 
     // Fires when currency symbol has been changed

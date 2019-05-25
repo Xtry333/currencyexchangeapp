@@ -23,6 +23,10 @@
     padding: 16px 25px;
 }
 
+.switch-panel {
+    margin: 1px;
+}
+
 .loading {
     position: relative;
     background: url('../img/loader.gif') no-repeat;

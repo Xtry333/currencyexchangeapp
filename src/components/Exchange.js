@@ -11,7 +11,7 @@ class Exchange extends Component {
                 <div className={`rate ${loadingStr}`}>
                     {exchange.rate.toFixed(4)}
                 </div>
-                <div>
+                <div className='switch-panel'>
                     {exchange.from}
                     <button className='switch-icon' onClick={this.props.onSwitch} />
                     {exchange.to}
