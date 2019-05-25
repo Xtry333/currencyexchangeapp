@@ -3,11 +3,41 @@ import { Line } from 'react-chartjs-2'
 import './css/ChartView.css'
 
 class ChartView extends Component {
+    state = { dataRange: 30 };
+
+    lastXDays(x) {
+        const lastX = [];
+        const time =  new Date().getTime();
+        for (let i = 0; i < x; i++) {
+            lastX.push(new Date(time - (i * 24 * 60 * 60 * 1000)).toISOString().slice(0, 10));
+        }
+        return lastX;
+    }
+
+    onClick = (event) => {
+        const value = parseFloat(event.target.value);
+        this.setState({ dataRange: value});
+        //console.log(value);
+    }
+
     render() {
+        const days = this.lastXDays(this.state.dataRange);
+        //const labels = this.props.labels.slice();
+        const history = this.props.history.slice();
+
+        //console.log(labels)
+        const xs = [];
+        const ys = [];
+
+        for(let d of days) {
+            xs.unshift(d);
+            ys.unshift(history.pop());
+        }
+
         return (
             <div className='ChartView'>
                 <Line redraw data={{
-                    labels: this.props.labels,
+                    labels: xs,
                     datasets: [{
                         label: `${this.props.historySymbols.from} -> ${this.props.historySymbols.to}`,
                         borderColor: 'rgb(200, 200, 200)',
@@ -17,7 +47,7 @@ class ChartView extends Component {
                         pointRadius: 0,
                         pointHitRadius: 3,
                         pointBorderWidth: 0,
-                        data: this.props.history
+                        data: ys
                     }, {
                         label: 'Negative Trend',
                         lineTension: 0,
@@ -51,6 +81,12 @@ class ChartView extends Component {
                         fontSize: 14
                     }
                 }} />
+                <div className='buttons'>
+                    <button onClick={this.onClick} value='3'>3D</button>
+                    <button onClick={this.onClick} value='7'>1W</button>
+                    <button onClick={this.onClick} value='30'>1M</button>
+                    <button onClick={this.onClick} value='90'>3M</button>
+                </div>
             </div>
         );
     }

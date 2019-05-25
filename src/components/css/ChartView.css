@@ -4,3 +4,17 @@
     text-align: center;
     margin: auto;
 }
+
+.buttons {
+    background: rgb(250, 250, 250);
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid lightgray;
+    box-shadow: 2px 2px 5px lightgray;
+}
+
+.buttons button {
+    width: 50px;
+    margin: 2.5px;
+    padding: 5px;
+}
