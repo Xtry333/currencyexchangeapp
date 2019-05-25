@@ -4,11 +4,12 @@ import './css/Exchange.css'
 class Exchange extends Component {
     render() {
         const exchange = this.props.exchange;
+        const loadingStr = this.props.loading ? 'loading' : '';
         return (
             <div className='Exchange'>
                 Real-time exchanging rate
-                <div className='rate'>
-                    {exchange.rate.toFixed(5)}
+                <div className={`rate ${loadingStr}`}>
+                    {exchange.rate.toFixed(4)}
                 </div>
                 <div>
                     {exchange.from}

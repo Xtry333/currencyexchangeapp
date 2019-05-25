@@ -9,12 +9,16 @@ class App extends Component {
     state = {
         symbols: { from: 'EUR', to: 'PLN' },
         exchange: { rate: 4.26, from: 'EUR', to: 'PLN' },
-        loadingRate: false
+        loadingRate: false,
+        history: { symbols: { from: '', to: '' }, ys: [], labels: [], reqNum: 0 }
     };
 
-    componentDidMount() { };
+    componentDidMount() { 
+        //this.setExchangeRate(symbols);
+        //this.setHistoricalData(symbols);
+    };
 
-    onCurrencyChange = async (event) => {
+    onCurrencyChange = (event) => {
         const value = event.target.value;
         const name = event.target.name;
         const c = this.state.symbols; // current symbols
@@ -22,8 +26,9 @@ class App extends Component {
         if (name === 'symbolFrom') symbols.from = value;
         if (name === 'symbolTo') symbols.to = value;
         if (symbols.to === symbols.from) { this.onCurrencySwitch(); return; }
-        this.setExchangeRate(symbols);
         this.setState({ symbols });
+        this.setExchangeRate(symbols);
+        this.setHistoricalData(symbols);
     }
 
     onCurrencySwitch = () => {
@@ -38,6 +43,7 @@ class App extends Component {
     }
 
     setExchangeRate(symbols) {
+        this.setState({ loadingRate: true });
         RealTime.get('/', {
             params: {
                 from_currency: symbols.from,
@@ -45,10 +51,10 @@ class App extends Component {
             },
         }).then(res => {
             let data = res.data;
-            if (data && data["Realtime Currency Exchange Rate"] && data["Realtime Currency Exchange Rate"]["5. Exchange Rate"]) {
-                let rate = parseFloat(data["Realtime Currency Exchange Rate"]["5. Exchange Rate"]); // Oh come on, that path, really...? ._.
+            if (data && data['Realtime Currency Exchange Rate'] && data['Realtime Currency Exchange Rate']['5. Exchange Rate']) {
+                let rate = parseFloat(data['Realtime Currency Exchange Rate']['5. Exchange Rate']); // Oh come on, that path, really...? ._.
                 const exchange = { rate, from: symbols.from, to: symbols.to };
-                this.setState({ exchange });
+                this.setState({ exchange, loadingRate: false });
             } else {
                 console.log('Error: Could not get Currency Exchange Rate from API');
                 console.log(res.data);
@@ -65,7 +71,34 @@ class App extends Component {
                 to_symbol: symbols.to
             },
         }).then(res => {
+            //const history = this.state.history;
+            const data = res.data;
+            if (data) {
+                const meta = data['Meta Data'];
+                const raw = data['Time Series FX (Daily)'];
+                if (!meta) return;
+                if (!data) return;
 
+                console.log(raw);
+
+                const labels = [], ys = [];
+                //history.labels.splice(0, history.labels.length);
+                //history.ys.splice(0, history.ys.length);
+
+                for (let key in raw) {
+                    labels.unshift(key);
+                    ys.unshift(1.0 / raw[key]['4. close']);
+                }
+
+                const history = { labels, ys };
+                history.reqNum = 1 + this.state.history.reqNum
+                history.symbols = { from: meta['2. From Symbol'], to: meta['3. To Symbol'] };
+
+                this.setState({ history });
+            } else {
+                console.log('Error: Could not get Historical Data from API');
+                console.log(res.data);
+            }
         }).catch(err => {
             console.log(`Error: ${err}`);
         });
@@ -79,7 +112,7 @@ class App extends Component {
                     <Currency onChange={this.onCurrencyChange} symbols={this.state.symbols}></Currency>
                     <Exchange onSwitch={this.onCurrencySwitch} exchange={this.state.exchange} loading={this.state.loadingRate}></Exchange>
                 </div>
-                <ChartView></ChartView>
+                <ChartView key={`REQ${this.state.history.reqNum}`} history={this.state.history}></ChartView>
             </div>
         )
     };

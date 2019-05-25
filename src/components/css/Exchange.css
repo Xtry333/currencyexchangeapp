@@ -22,3 +22,11 @@
     border: none;
     padding: 16px 25px;
 }
+
+.loading {
+    position: relative;
+    background: url('../img/loader.gif') no-repeat;
+    background-size: contain;
+    background-position: center;
+    z-index: 999;
+}
