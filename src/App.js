@@ -8,16 +8,20 @@ import './App.css';
 class App extends Component {
     state = {
         symbols: { from: 'EUR', to: 'PLN' },
-        exchange: { rate: 4.26, from: 'EUR', to: 'PLN' },
+        exchange: { rate: 1.0, from: 'EUR', to: 'PLN' },
         loadingRate: false,
         history: [],
         labels: [],
         historySymbols: { from: '', to: '' },
+        refreshTimer: {}
     };
 
     // Loads exchange data on site visit
     componentDidMount() {
         this.setExchangeRate(this.state.symbols);
+        this.refreshTimer = setInterval(() => {
+            this.setExchangeRate(this.state.symbols);
+        }, 1000 * 60 * 5);
         this.setHistoricalData(this.state.symbols);
     };
 
