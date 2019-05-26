@@ -18,3 +18,7 @@
     margin: 2.5px;
     padding: 5px;
 }
+
+.trend-line-showhide {
+    width: 100px !important;
+}
