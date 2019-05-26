@@ -31,5 +31,8 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "canvas": "^2.5.0",
+    "react-test-renderer": "^16.8.6"
+  }
 }
