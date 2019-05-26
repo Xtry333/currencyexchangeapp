@@ -16,13 +16,22 @@ class App extends Component {
         refreshTimer: {}
     };
 
-    // Loads exchange data on site visit
+    // Loads exchange data on site visit, and gets currency symbols saved into local storage on subsequent visits
     componentDidMount() {
-        this.setExchangeRate(this.state.symbols);
+        let to = localStorage.getItem('symbol_to');
+        let from = localStorage.getItem('symbol_from');
+        const symbols = { from, to };
+        if (to && from) {
+            this.setState({ symbols });
+        } else {
+            to = this.state.symbols.to;
+            from = this.state.symbols.to;
+        }
+        this.setExchangeRate(symbols);
         this.refreshTimer = setInterval(() => {
-            this.setExchangeRate(this.state.symbols);
+            this.setExchangeRate(symbols);
         }, 1000 * 60 * 5);
-        this.setHistoricalData(this.state.symbols);
+        this.setHistoricalData(symbols);
     };
 
     // Fires when currency symbol has been changed
@@ -34,6 +43,8 @@ class App extends Component {
         if (name === 'symbolFrom') symbols.from = value;
         if (name === 'symbolTo') symbols.to = value;
         if (symbols.to === symbols.from) { this.onCurrencySwitch(); return; }
+        localStorage.setItem('symbol_from', symbols.from);
+        localStorage.setItem('symbol_to', symbols.to);
         this.setState({ symbols });
         this.setExchangeRate(symbols);
         this.setHistoricalData(symbols);
