@@ -18,14 +18,14 @@ class App extends Component {
 
     // Loads exchange data on site visit, and gets currency symbols saved into local storage on subsequent visits
     componentDidMount() {
-        let to = localStorage.getItem('symbol_to');
         let from = localStorage.getItem('symbol_from');
+        let to = localStorage.getItem('symbol_to');
         const symbols = { from, to };
         if (to && from) {
             this.setState({ symbols });
         } else {
-            to = this.state.symbols.to;
-            from = this.state.symbols.to;
+            symbols.to = this.state.symbols.to;
+            symbols.from = this.state.symbols.from;
         }
         this.setExchangeRate(symbols);
         this.refreshTimer = setInterval(() => {

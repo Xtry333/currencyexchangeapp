@@ -9,7 +9,7 @@ class Currency extends Component {
         Symbols.then(res => {
             this.setState({allSymbols: res.data})
          }).catch(err => { 
-            console.log(err);
+            console.log(`Error: ${err}`);
          });
     }
 

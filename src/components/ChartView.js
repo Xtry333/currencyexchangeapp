@@ -5,6 +5,7 @@ import './css/ChartView.css'
 class ChartView extends Component {
     state = { dataRange: 30, trendVisible: true };
 
+    // Finds nearest maxs and mins and highest in given radius
     findMaxes(ys, radius) {
         const maxs = [];
         const mins = [];
