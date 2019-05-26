@@ -103,8 +103,6 @@ class App extends Component {
             const meta = data['Meta Data'];
             const raw = data['Time Series FX (Daily)'];
             if (meta && raw) {
-                //console.log(meta);
-                //console.log(raw);
 
                 const labels = this.state.labels, history = this.state.history;
                 labels.splice(0, labels.length);
@@ -135,7 +133,6 @@ class App extends Component {
                     <Currency onChange={this.onCurrencyChange} symbols={this.state.symbols}></Currency>
                     <Exchange onSwitch={this.onCurrencySwitch} exchange={this.state.exchange} loading={this.state.loadingRate}></Exchange>
                 </div>
-                {/* <ChartView key={`REQ${this.state.history.reqNum}`} history={this.state.history}></ChartView> */}
                 <ChartView history={this.state.history} labels={this.state.labels} historySymbols={this.state.historySymbols}></ChartView>
             </div>
         )

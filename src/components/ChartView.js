@@ -123,6 +123,8 @@ class ChartView extends Component {
             }
         }
 
+        let trendLine = this.state.trendVisible ? 'Hide' : 'Show';
+
         return (
             <div className='ChartView'>
                 <Line redraw data={{
@@ -177,7 +179,7 @@ class ChartView extends Component {
                     <button onClick={this.onClick} value='7'>1W</button>
                     <button onClick={this.onClick} value='30'>1M</button>
                     <button onClick={this.onClick} value='90'>3M</button>
-                    <button className='trend-line-showhide' onClick={this.onShowHideTrend}>Trend Line</button>
+                    <button className='trend-line-showhide' onClick={this.onShowHideTrend}>{`${trendLine} trend line`}</button>
                 </div>
             </div>
         );
