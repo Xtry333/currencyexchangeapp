@@ -13,7 +13,7 @@ export const Historical = Axios.create({
     baseURL: 'https://www.alphavantage.co/query',
     params: {
         function: 'FX_DAILY',
-        apikey: Auth.Key,
+        apikey: Auth.Key2,
         datatype: 'json'
     }
 });
